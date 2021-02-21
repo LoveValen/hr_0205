@@ -13,9 +13,9 @@
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
+          ref="mobile"
           v-model="loginForm.mobile"
-          placeholder="用户"
+          placeholder="手机号"
           name="mobile"
           type="text"
           tabindex="1"
@@ -55,24 +55,15 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
+import { validMobile } from '@/utils/validate'
+// import { login } from '@/api/user'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
+    const validateMobile = (rule, value, callback) => {
+      validMobile(value) ? callback() : callback(new Error('手机号输入不合法'))
     }
     return {
       loginForm: {
@@ -80,8 +71,11 @@ export default {
         password: '123456'
       },
       loginRules: {
-        mobile: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        mobile: [{ required: true, trigger: 'blur', validator: validateMobile }],
+        password: [
+          { required: true, trigger: 'blur', message: '密码不能为空' },
+          { min: 6, max: 16, trigger: 'blur', message: '密码长度为 6-16 位' }
+        ]
       },
       loading: false,
       passwordType: 'password',
@@ -108,21 +102,24 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      this.$store.dispatch('user/login', this.loginForm)
     }
+    // handleLogin() {
+    //   this.$refs.loginForm.validate(valid => {
+    //     if (valid) {
+    //       this.loading = true
+    //       this.$store.dispatch('user/login', this.loginForm).then(() => {
+    //         this.$router.push({ path: this.redirect || '/' })
+    //         this.loading = false
+    //       }).catch(() => {
+    //         this.loading = false
+    //       })
+    //     } else {
+    //       console.log('error submit!!')
+    //       return false
+    //     }
+    //   })
+    // }
   }
 }
 </script>
