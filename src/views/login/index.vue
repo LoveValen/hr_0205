@@ -57,6 +57,7 @@
 <script>
 // import { validUsername } from '@/utils/validate'
 import { validMobile } from '@/utils/validate'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
@@ -90,6 +91,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['user/login']),
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -100,16 +102,24 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
-      this.loading = true
-      // this.$refs.loginForm.validate()
-      this.$store.dispatch('user/login', this.loginForm).then(() => {
+    async handleLogin() {
+      try {
+        this.loading = true
+        await this.$refs.loginForm.validate()
+        await this['user/login'](this.loginForm)
         this.$router.push('/')
-      }).catch((error) => {
+      // this.$store.dispatch('user/login', this.loginForm).then(() => {
+      //   this.$router.push('/')
+      // }).catch((error) => {
+      //   this.$message.error(error)
+      // }).finally(() => {
+      //   this.loading = false
+      // })
+      } catch (error) {
         this.$message.error(error)
-      }).finally(() => {
+      } finally {
         this.loading = false
-      })
+      }
     }
   }
 }
