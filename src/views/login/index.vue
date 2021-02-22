@@ -101,13 +101,15 @@ export default {
       })
     },
     handleLogin() {
-      try {
-        this.$store.dispatch('user/login', this.loginForm).then(() => {
-          this.$router.push('/')
-        })
-      } catch (error) {
+      this.loading = true
+      // this.$refs.loginForm.validate()
+      this.$store.dispatch('user/login', this.loginForm).then(() => {
+        this.$router.push('/')
+      }).catch((error) => {
         this.$message.error(error)
-      }
+      }).finally(() => {
+        this.loading = false
+      })
     }
   }
 }
