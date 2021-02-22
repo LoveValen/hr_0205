@@ -1,39 +1,34 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 
-// create an axios instance
+// 创建一个 axios 实例
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  baseURL: process.env.VUE_APP_BASE_API, //  设置axios请求的基础的基础请求地址
+  timeout: 5000 // 延时时间
 })
 
-// request interceptor
-service.interceptors.request.use(
-  config => {
-    return config
-  },
-  error => {
-    // do something with request error
-    console.log(error) // for debug
-    return Promise.reject(error)
-  }
-)
+// 请求拦截器
+service.interceptors.request.use()
 
-// response interceptor
-service.interceptors.response.use(
-  response => {
-    return response
-  },
-  error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+// 响应拦截器
+// 第一个用来处理处理 200 状态码的成功请求(数据不一定对)
+// 第二个函数则是处理失败的请求如 404 500
+service.interceptors.response.use(response => {
+  // 解构 response 得到 success / data / message
+  const { data, message, success } = response.data
+  if (success) {
+    // 如果 success 为真，正常返回
+    return data
+  } else {
+    // 否则提示错误
+    Message.error(message || '系统错误')
+    return Promise.reject(new Error(message)) // 这里 reject 是为了使用的时候继续可以链式调用
   }
-)
+}, error => {
+  // console.dir(error)
+  // 提示错误
+  Message.error(error.message)
+  return Promise.reject(new Error(error))
+})
 
 export default service

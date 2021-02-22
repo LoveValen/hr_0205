@@ -57,7 +57,6 @@
 <script>
 // import { validUsername } from '@/utils/validate'
 import { validMobile } from '@/utils/validate'
-// import { login } from '@/api/user'
 
 export default {
   name: 'Login',
@@ -102,24 +101,14 @@ export default {
       })
     },
     handleLogin() {
-      this.$store.dispatch('user/login', this.loginForm)
+      try {
+        this.$store.dispatch('user/login', this.loginForm).then(() => {
+          this.$router.push('/')
+        })
+      } catch (error) {
+        this.$message.error(error)
+      }
     }
-    // handleLogin() {
-    //   this.$refs.loginForm.validate(valid => {
-    //     if (valid) {
-    //       this.loading = true
-    //       this.$store.dispatch('user/login', this.loginForm).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //         this.loading = false
-    //       }).catch(() => {
-    //         this.loading = false
-    //       })
-    //     } else {
-    //       console.log('error submit!!')
-    //       return false
-    //     }
-    //   })
-    // }
   }
 }
 </script>
@@ -156,8 +145,10 @@ $cursor: #fff;
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+        // box-shadow: 0 0 0px 1000px $bg inset !important;
+        // -webkit-text-fill-color: $cursor !important;
+        transition-delay: 99999s;
+        transition: color 99999s ease-out, background-color 99999s ease-out;
       }
     }
   }

@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 export default {
   namespaced: true,
   state: {
-    token: getToken()
+    token: getToken() // 设置token初始状态  token初始化 => 放入缓存中
   },
   mutations: {
     setToken(state, data) {
@@ -15,13 +15,11 @@ export default {
     }
   },
   actions: {
-    async login(store, data) {
-      const res = await login(data)
-      const { message, success, data: token } = res.data
-      if (success) {
-        Message.success({ message })
-        store.commit('setToken', token)
-      }
+    login(store, data) {
+      return login(data).then((res) => {
+        store.commit('setToken', res)
+        Message.success('登录成功')
+      })
     }
   }
 }
