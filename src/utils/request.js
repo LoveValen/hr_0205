@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '@/store'
 import { Message } from 'element-ui'
 
 // 创建一个 axios 实例
@@ -8,7 +9,21 @@ const service = axios.create({
 })
 
 // 请求拦截器
-service.interceptors.request.use()
+service.interceptors.request.use(
+  // 统一实现请求 token 注入
+  // 1. 判断有登陆过
+  // 2. 是否已经带有 token
+  config => {
+    if (!config.headers.Authorization && store.getters.token) {
+      config.headers.Authorization = `Bearer ${store.getters.token}`
+    }
+    return config
+  },
+  err => {
+    Message.error('请求失败')
+    return Promise.reject(new Error(err.message))
+  }
+)
 
 // 响应拦截器
 // 第一个用来处理处理 200 状态码的成功请求(数据不一定对)

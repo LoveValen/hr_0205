@@ -1,5 +1,5 @@
 import { setToken, getToken } from '@/utils/auth'
-import { login } from '@/api/user'
+import { login, getUserInfo } from '@/api/user'
 import { Message } from 'element-ui'
 export default {
   namespaced: true,
@@ -20,6 +20,10 @@ export default {
         store.commit('setToken', res)
         Message.success('登录成功')
       })
+    },
+    async getUserInfo(store) {
+      const res = await getUserInfo()
+      console.log(res)
     }
   }
 }
