@@ -28,7 +28,7 @@ export default {
     async getUserInfo(store) {
       const res = await getUserInfo()
       store.commit('getUserInfo', res)
-      // console.log(res)
+      console.log(res)
     }
   }
 }

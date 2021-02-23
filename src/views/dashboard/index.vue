@@ -13,10 +13,10 @@ export default {
     ...mapGetters([
       'name'
     ])
-  },
-  async created() {
-    await this.$store.dispatch('user/getUserInfo')
   }
+  // async created() {
+  //   await this.$store.dispatch('user/getUserInfo')
+  // }
 }
 </script>
 
