@@ -13,22 +13,23 @@ service.interceptors.request.use()
 // 响应拦截器
 // 第一个用来处理处理 200 状态码的成功请求(数据不一定对)
 // 第二个函数则是处理失败的请求如 404 500
-service.interceptors.response.use(response => {
+service.interceptors.response.use(
+  response => {
   // 解构 response 得到 success / data / message
-  const { data, message, success } = response.data
-  if (success) {
+    const { data, message, success } = response.data
+    if (success) {
     // 如果 success 为真，正常返回
-    return data
-  } else {
+      return data
+    } else {
     // 否则提示错误
-    Message.error(message || '系统错误')
-    return Promise.reject(new Error(message)) // 这里 reject 是为了使用的时候继续可以链式调用
-  }
-}, error => {
+      Message.error(message || '系统错误')
+      return Promise.reject(new Error(message)) // 这里 reject 是为了使用的时候继续可以链式调用
+    }
+  }, error => {
   // console.dir(error)
   // 提示错误
-  Message.error(error.message)
-  return Promise.reject(new Error(error))
-})
+    Message.error(error.message)
+    return Promise.reject(new Error(error))
+  })
 
 export default service
