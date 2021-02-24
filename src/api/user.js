@@ -8,6 +8,10 @@ export function login(data) {
   })
 }
 
+/** *
+ *
+ * 获取用户的基本信息
+ * **/
 export function getUserInfo() {
   return request({
     method: 'post',
@@ -15,5 +19,12 @@ export function getUserInfo() {
   })
 }
 
-export function logout() {
+/** *
+ *
+ * 通过 id 获取用户的详细信息  现在写它 完全是为了显示头像
+ * **/
+export function getUserDetailById(id) {
+  return request({
+    url: `/sys/user/${id}`
+  })
 }

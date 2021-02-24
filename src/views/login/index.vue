@@ -107,16 +107,9 @@ export default {
         this.loading = true
         await this.$refs.loginForm.validate()
         await this['user/login'](this.loginForm)
-        this.$router.push('/')
-      // this.$store.dispatch('user/login', this.loginForm).then(() => {
-      //   this.$router.push('/')
-      // }).catch((error) => {
-      //   this.$message.error(error)
-      // }).finally(() => {
-      //   this.loading = false
-      // })
+        this.$router.push(this.redirect || '/')
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error('error')
       } finally {
         this.loading = false
       }

@@ -1,5 +1,5 @@
 import { setToken, getToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user'
+import { login, getUserInfo, getUserDetailById } from '@/api/user'
 import { Message } from 'element-ui'
 export default {
   namespaced: true,
@@ -14,7 +14,7 @@ export default {
       // 引入 utils 中的小工具，用来将token存入到cookie中
       setToken(data)
     },
-    getUserInfo(state, data) {
+    setUserInfo(state, data) {
       state.userInfo = data
     }
   },
@@ -26,9 +26,16 @@ export default {
       })
     },
     async getUserInfo(store) {
-      const res = await getUserInfo()
-      store.commit('getUserInfo', res)
-      console.log(res)
+      const resSimple = await getUserInfo()
+      const resDetail = await getUserDetailById(resSimple.userId)
+      const res = {
+        ...resSimple,
+        ...resDetail
+      }
+      store.commit('setUserInfo', res)
+      // 加一个点睛之笔  这里这一步，暂时用不到，但是请注意，这给我们后边会留下伏笔
+      return res
+      // console.log(res)
     }
   }
 }
