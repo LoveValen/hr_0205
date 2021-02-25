@@ -54,9 +54,14 @@ service.interceptors.response.use(
       return Promise.reject(new Error(message)) // 这里 reject 是为了使用的时候继续可以链式调用
     }
   },
-  error => {
-  // console.dir(error)
-  // 提示错误
+  async error => {
+    // console.dir(error)
+    if (error.response && error.response.data && error.response.data.code === 10002) {
+      await store.dispatch('user/logout')
+      router.push('/login')
+      return Promise.reject(new Error('您还未登录'))
+    }
+    // 提示错误
     Message.error(error.message)
     return Promise.reject(new Error(error))
   })
