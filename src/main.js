@@ -36,7 +36,7 @@ Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 
 import { imgerror } from '@/directive'
-// 自定义事件
+// 自定义事件 解决破图问题
 Vue.directive('imgerror', imgerror)
 
 new Vue({

@@ -3,7 +3,7 @@ import store from '@/store'
 import NProgress from 'nprogress' // 引入一份进度条插件
 import 'nprogress/nprogress.css' // 引入进度条样式
 
-const writeList = ['/login', '/404']
+const whiteList = ['/login', '/404']
 router.beforeEach((to, from, next) => {
   NProgress.start() // 开启进度条
   // 判断有无 token
@@ -21,7 +21,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     // 如果没有 token
-    if (writeList.indexOf(to.path) !== -1) {
+    if (whiteList.indexOf(to.path) !== -1) {
       // 如果找到了，表示在白名单内
       next()
     } else {

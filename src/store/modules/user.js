@@ -1,4 +1,4 @@
-import { setToken, getToken, removeToken } from '@/utils/auth'
+import { setToken, getToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 import { Message } from 'element-ui'
 export default {
@@ -33,6 +33,8 @@ export default {
       const res = await login(data)
       store.commit('setToken', res)
       Message.success('登录成功')
+      // 设置时间戳
+      setTimeStamp()
     },
     async getUserInfo(store) {
       const resSimple = await getUserInfo()

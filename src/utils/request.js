@@ -1,6 +1,8 @@
 import axios from 'axios'
 import store from '@/store'
+import { getTimeStamp } from '@/utils/auth'
 import { Message } from 'element-ui'
+import router from '@/router'
 
 // 创建一个 axios 实例
 const service = axios.create({
@@ -8,14 +10,25 @@ const service = axios.create({
   timeout: 5000 // 延时时间
 })
 
+// 设置 token 失效时间
+const timeOut = 5000
+
 // 请求拦截器
 service.interceptors.request.use(
   // 统一实现请求 token 注入
   // 1. 判断有登陆过
   // 2. 是否已经带有 token
-  config => {
+  async config => {
     if (!config.headers.Authorization && store.getters.token) {
-      config.headers.Authorization = `Bearer ${store.getters.token}`
+      if (!isTimeOut()) {
+        config.headers.Authorization = `Bearer ${store.getters.token}`
+      } else {
+        // token 过期，执行退出逻辑清理数据
+        await store.dispatch('user/logout')
+        router.push('/login')
+        // 拦截住剩下的请求
+        return Promise.reject(new Error('登录已超时'))
+      }
     }
     return config
   },
@@ -48,4 +61,9 @@ service.interceptors.response.use(
     return Promise.reject(new Error(error))
   })
 
+function isTimeOut() {
+  const currentTime = Date.now()
+  const timeStamp = getTimeStamp()
+  return (currentTime - timeStamp) / 1000 > timeOut
+}
 export default service
