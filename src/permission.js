@@ -11,7 +11,6 @@ router.beforeEach((to, from, next) => {
     // 如果有token，判断是不是去登录页
     if (to.path === '/login') {
       // 如果去登录页，则跳转到首页
-      // router.push('/')
       next('/')
     } else {
       if (!store.getters.name) {
@@ -26,7 +25,6 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       next('/login')
-      // router.push('/login')
     }
   }
   // 修复手动页面切换地址或页面刷新时无法停止进度条的问题
