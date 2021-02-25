@@ -5,7 +5,7 @@
         组织架构
       </h2>
       <el-card class="tree-card">
-        <TreeTools :tree-node="company" />
+        <TreeTools :tree-node="company" :is-root="true" />
         <el-tree
           :data="departs"
           :props="defaultProps"
@@ -33,19 +33,30 @@ export default {
       departs: [
         {
           name: '总裁办',
+          manager: '火影',
           children: [
             {
-              name: '董事会'
+              name: '董事会',
+              manager: '上忍'
             }
           ]
         },
-        { name: '行政部' },
-        { name: '人事部' }
+        {
+          name: '行政部',
+          manager: '中忍'
+        },
+        {
+          name: '人事部',
+          manager: '下忍'
+        }
       ],
       defaultProps: {
         label: 'name'
       },
-      company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人' }
+      company: {
+        name: '江苏传智播客教育科技股份有限公司',
+        manager: '负责人'
+      }
     }
   }
 }
