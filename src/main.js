@@ -35,6 +35,10 @@ Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
 
+import { imgerror } from '@/directive'
+// 自定义事件
+Vue.directive('imgerror', imgerror)
+
 new Vue({
   el: '#app',
   router,
