@@ -1,4 +1,4 @@
-import { setToken, getToken } from '@/utils/auth'
+import { setToken, getToken, removeToken } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 import { Message } from 'element-ui'
 export default {
@@ -16,14 +16,23 @@ export default {
     },
     setUserInfo(state, data) {
       state.userInfo = data
+    },
+    removeToken(state) {
+      // 删除 vuex 中的token
+      state.token = ''
+      // 删除缓存中的 token
+      removeToken()
+    },
+    removeUserInfo(state) {
+      // 删除用户信息
+      state.userInfo = {}
     }
   },
   actions: {
-    login(store, data) {
-      return login(data).then((res) => {
-        store.commit('setToken', res)
-        Message.success('登录成功')
-      })
+    async login(store, data) {
+      const res = await login(data)
+      store.commit('setToken', res)
+      Message.success('登录成功')
     },
     async getUserInfo(store) {
       const resSimple = await getUserInfo()
@@ -36,6 +45,10 @@ export default {
       // 加一个点睛之笔  这里这一步，暂时用不到，但是请注意，这给我们后边会留下伏笔
       return res
       // console.log(res)
+    },
+    logout(store) {
+      store.commit('removeToken')
+      store.commit('removeUserInfo')
     }
   }
 }

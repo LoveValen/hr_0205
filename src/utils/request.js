@@ -40,7 +40,8 @@ service.interceptors.response.use(
       Message.error(message || '系统错误')
       return Promise.reject(new Error(message)) // 这里 reject 是为了使用的时候继续可以链式调用
     }
-  }, error => {
+  },
+  error => {
   // console.dir(error)
   // 提示错误
     Message.error(error.message)
