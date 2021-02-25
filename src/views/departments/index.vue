@@ -5,26 +5,7 @@
         组织架构
       </h2>
       <el-card class="tree-card">
-        <el-row type="flex" justify="space-between" align="middle" style="height: 40px">
-          <el-col>
-            <span>江苏传智播客科技股份有限公司</span>
-          </el-col>
-          <el-col :span="4">
-            <el-row type="flex" justify="start">
-              <el-col>负责人</el-col>
-              <el-col>
-                <el-dropdown>
-                  <span>
-                    操作<i class="el-icon-arrow-down" />
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>添加子部门</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
+        <TreeTools :tree-node="company" />
         <el-tree
           :data="departs"
           :props="defaultProps"
@@ -34,28 +15,7 @@
           <!-- 这里是插槽，每个树形节点都会渲染出一行 -->
           <!-- 利用作用域插槽的方式，获取内部的每个节点数据 -->
           <!-- 拿到了 scoped 以后，当前节点的数据就在 scope.data 当中 -->
-          <el-row slot-scope="{data}" type="flex" justify="space-between" align="middle" style="height: 40px; width: 100%">
-            <el-col>
-              <span>{{ data.name }}</span>
-            </el-col>
-            <el-col :span="4">
-              <el-row type="flex" justify="start">
-                <el-col>负责人</el-col>
-                <el-col>
-                  <el-dropdown>
-                    <span>
-                      操作<i class="el-icon-arrow-down" />
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>添加子部门</el-dropdown-item>
-                      <el-dropdown-item>编辑部门</el-dropdown-item>
-                      <el-dropdown-item>删除部门</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </el-col>
-              </el-row>
-            </el-col>
-          </el-row>
+          <TreeTools slot-scope="{data}" :tree-node="data" />
         </el-tree>
       </el-card>
     </div>
@@ -63,7 +23,11 @@
 </template>
 
 <script>
+import TreeTools from './components/tree-tools'
 export default {
+  components: {
+    TreeTools
+  },
   data() {
     return {
       departs: [
@@ -80,7 +44,8 @@ export default {
       ],
       defaultProps: {
         label: 'name'
-      }
+      },
+      company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人' }
     }
   }
 }
