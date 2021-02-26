@@ -24,40 +24,29 @@
 
 <script>
 import TreeTools from './components/tree-tools'
+import { getDepartments } from '@/api/departments'
+import { tranListToTreeData } from '@/utils'
 export default {
   components: {
     TreeTools
   },
   data() {
     return {
-      departs: [
-        {
-          name: '总裁办',
-          manager: '火影',
-          children: [
-            {
-              name: '董事会',
-              manager: '上忍'
-            }
-          ]
-        },
-        {
-          name: '行政部',
-          manager: '中忍'
-        },
-        {
-          name: '人事部',
-          manager: '下忍'
-        }
-      ],
+      departs: [],
       defaultProps: {
         label: 'name'
       },
-      company: {
-        name: '江苏传智播客教育科技股份有限公司',
-        manager: '负责人'
-      }
+      company: {}
     }
+  },
+  async created() {
+    const res = await getDepartments()
+    console.log(res)
+    this.company = {
+      name: res.companyName,
+      manager: '负责人'
+    }
+    this.departs = tranListToTreeData(res.depts, '')
   }
 }
 </script>
