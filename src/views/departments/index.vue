@@ -15,7 +15,7 @@
           <!-- 这里是插槽，每个树形节点都会渲染出一行 -->
           <!-- 利用作用域插槽的方式，获取内部的每个节点数据 -->
           <!-- 拿到了 scoped 以后，当前节点的数据就在 scope.data 当中 -->
-          <TreeTools slot-scope="{data}" :tree-node="data" />
+          <TreeTools slot-scope="{data}" :tree-node="data" @delDepartments="delDepartments" />
         </el-tree>
       </el-card>
     </div>
@@ -39,14 +39,22 @@ export default {
       company: {}
     }
   },
-  async created() {
-    const res = await getDepartments()
-    console.log(res)
-    this.company = {
-      name: res.companyName,
-      manager: '负责人'
+  created() {
+    this.getDepartments()
+  },
+  methods: {
+    async getDepartments() {
+      const res = await getDepartments()
+      console.log(res)
+      this.company = {
+        name: res.companyName,
+        manager: '负责人'
+      }
+      this.departs = tranListToTreeData(res.depts, '')
+    },
+    delDepartments() {
+      this.getDepartments()
     }
-    this.departs = tranListToTreeData(res.depts, '')
   }
 }
 </script>
