@@ -56,13 +56,13 @@
     </el-form>
     <el-row slot="footer" class="dialog-footer">
       <el-button>取 消</el-button>
-      <el-button type="primary">确 定</el-button>
+      <el-button type="primary" @click="btnOk">确 定</el-button>
     </el-row>
   </el-dialog>
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { getDepartments, addDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -132,9 +132,30 @@ export default {
       this.people = res
       // console.log(res)
     },
+    async btnOk() {
+      try {
+        // 校验表单
+        await this.$refs.deptForm.validate()
+        // 发送请求
+        await addDepartments({ ...this.formData, pid: this.node.id })
+        this.$message.success('操作成功')
+        // 关闭当前弹窗
+        // 不能直接改 props
+        // this.showDialog = false
+        // 应该通知父页面进行变更
+        // this.$emit('xxxx')
+        // 另外还可以用固定写法，配合父组件的 .sync 修饰符，方便修改
+        this.$emit('update:showDialog', false)
+        // 更新数据
+        this.$emit('addDepts')
+      } catch (error) {
+        console.log(error)
+      }
+    },
     checkManager() {
       // console.log('失去焦点')
       setTimeout(() => {
+        // validateField(props: array) 对部分表单字段进行校验的方法
         this.$refs.deptForm.validateField('manager')
       }, 50)
     }
