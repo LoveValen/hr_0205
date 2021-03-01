@@ -25,10 +25,11 @@
             :tree-node="data"
             @delDepartments="delDepartments"
             @addDepts="addDepts"
+            @editDepts="editDepts"
           />
         </el-tree>
       </el-card>
-      <AddDept :show-dialog.sync="showDialog" :node="node" @addDepts="getDepartments" />
+      <AddDept ref="addDept" :show-dialog.sync="showDialog" :node="node" @addDepts="getDepartments" />
     </div>
   </div>
 </template>
@@ -74,6 +75,14 @@ export default {
     },
     addDepts(treeNode) {
       this.showDialog = true
+      this.node = treeNode
+    },
+    editDepts(treeNode) {
+      // 父组件执行子组件的方法获取数据
+      // 回显数据
+      this.$refs.addDept.getDepartDetail(treeNode.id)
+      this.showDialog = true
+      // 将获取的 treeNode 传给弹窗
       this.node = treeNode
     }
   }

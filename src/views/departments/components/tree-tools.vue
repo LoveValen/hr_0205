@@ -43,7 +43,7 @@ export default {
         if (command === 'add') {
           this.$emit('addDepts', this.treeNode)
         } else if (command === 'edit') {
-          console.log(command)
+          this.$emit('editDepts', this.treeNode)
         } else if (command === 'del') {
         // 先询问是否确认
           await this.$confirm('是否确认删除该部门')

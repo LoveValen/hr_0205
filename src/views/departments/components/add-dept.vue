@@ -1,9 +1,10 @@
 <template>
   <el-dialog
-    title="新增部门"
+    :title="title"
     :visible="showDialog"
+    @close="btnCancel"
   >
-    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px" @close="btnCancel">
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item
         label="部门名称"
         prop="name"
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartDetail } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -126,11 +127,15 @@ export default {
       people: []
     }
   },
+  computed: {
+    title() {
+      return this.formData.id ? '编辑部门' : '新增部门'
+    }
+  },
   methods: {
     async getEmployeeSimple() {
       const res = await getEmployeeSimple()
       this.people = res
-      // console.log(res)
     },
     async btnOk() {
       try {
@@ -165,6 +170,10 @@ export default {
         // validateField(props: array) 对部分表单字段进行校验的方法
         this.$refs.deptForm.validateField('manager')
       }, 50)
+    },
+    async getDepartDetail(id) {
+      // 获取部门的详细信息
+      this.formData = await getDepartDetail(id)
     }
   }
 }
