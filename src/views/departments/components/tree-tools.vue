@@ -41,7 +41,7 @@ export default {
     async handleCommand(command) {
       try {
         if (command === 'add') {
-          this.$emit('addDepts')
+          this.$emit('addDepts', this.treeNode)
         } else if (command === 'edit') {
           console.log(command)
         } else if (command === 'del') {

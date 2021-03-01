@@ -58,14 +58,35 @@
 </template>
 
 <script>
+import { getDepartments } from '@/api/departments'
 export default {
   props: {
     showDialog: {
       type: Boolean,
       default: false
+    },
+    node: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   data() {
+    const checkNameRepeat = async(rule, value, callback) => {
+      const { depts } = await getDepartments()
+      const isRepet = depts.filter(item => {
+        return item.pid === this.node.id
+      }).some(item => {
+        return item.name === value
+      })
+      isRepet ? callback(new Error('同部门名字不能相同')) : callback()
+    }
+    const checkCodeRepet = async(rule, value, callback) => {
+      const { depts } = await getDepartments()
+      const isRepet = depts.some(item => item.code === value)
+      isRepet ? callback(new Error('部门编码不能相同')) : callback()
+    }
     return {
       formData: {
         name: '',
@@ -75,13 +96,18 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '部门名称不能为空', trigger: 'blur' }
+          { required: true, message: '部门名称不能为空', trigger: 'blur' },
+          { min: 1, max: 50, message: '部门名称要求 1-50 个字符', trigger: 'blur' },
+          { validator: checkNameRepeat, trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '部门编码不能为空', trigger: 'blur' }
+          { required: true, message: '部门编码不能为空', trigger: 'blur' },
+          { min: 1, max: 50, message: '部门编码要求 1-50 个字符', trigger: 'blur' },
+          { validator: checkCodeRepet, trigger: 'blur' }
         ],
         introduce: [
-          { required: true, message: '部门介绍不能为空', trigger: 'blur' }
+          { required: true, message: '部门介绍不能为空', trigger: 'blur' },
+          { min: 1, max: 30, message: '部门介绍要求 1-300 个字符', trigger: 'blur' }
         ]
       }
     }

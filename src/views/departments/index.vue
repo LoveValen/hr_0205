@@ -27,7 +27,7 @@
           />
         </el-tree>
       </el-card>
-      <AddDept :show-dialog="showDialog" />
+      <AddDept :show-dialog="showDialog" :node="node" />
     </div>
   </div>
 </template>
@@ -50,7 +50,8 @@ export default {
         children: 'children'
       },
       company: {},
-      showDialog: false
+      showDialog: false,
+      node: {}
     }
   },
   created() {
@@ -69,8 +70,9 @@ export default {
     delDepartments() {
       this.getDepartments()
     },
-    addDepts() {
+    addDepts(treeNode) {
       this.showDialog = true
+      this.node = treeNode
     }
   }
 }

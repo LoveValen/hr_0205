@@ -12,7 +12,7 @@ export function getDepartments() {
 
 /** *
  *
- * 根据 id 根据部门
+ * 根据 id 删除部门
  * **/
 export function delDepartments(id) {
   return request({
