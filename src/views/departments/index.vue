@@ -8,6 +8,7 @@
         <TreeTools
           :tree-node="company"
           :is-root="true"
+          @addDepts="addDepts"
         />
         <hr>
         <el-tree
@@ -63,7 +64,8 @@ export default {
       console.log(res)
       this.company = {
         name: res.companyName,
-        manager: '负责人'
+        manager: '负责人',
+        id: ''
       }
       this.departs = tranListToTreeData(res.depts, '')
     },
