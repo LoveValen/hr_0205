@@ -3,7 +3,7 @@
     title="新增部门"
     :visible="showDialog"
   >
-    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px" @close="btnCancel">
       <el-form-item
         label="部门名称"
         prop="name"
@@ -55,7 +55,7 @@
       </el-form-item>
     </el-form>
     <el-row slot="footer" class="dialog-footer">
-      <el-button>取 消</el-button>
+      <el-button @click="btnCancel">取 消</el-button>
       <el-button type="primary" @click="btnOk">确 定</el-button>
     </el-row>
   </el-dialog>
@@ -137,6 +137,7 @@ export default {
         // 校验表单
         await this.$refs.deptForm.validate()
         // 发送请求
+        console.log(this.formData)
         await addDepartments({ ...this.formData, pid: this.node.id })
         this.$message.success('操作成功')
         // 关闭当前弹窗
@@ -151,6 +152,12 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    btnCancel() {
+      // 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
+      this.$refs.deptForm.resetFields()
+      // 关闭窗口
+      this.$emit('update:showDialog', false)
     },
     checkManager() {
       // console.log('失去焦点')
