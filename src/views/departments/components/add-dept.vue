@@ -84,18 +84,30 @@ export default {
       // 1. 获取全部部门数据
       const { depts } = await getDepartments()
       // 2. 检验是否同名
-      const isRepet = depts.filter(item => {
+      let isRepet
+      if (this.formData.id) {
+        isRepet = depts.filter(item => {
         // 2.1 筛选出父部门相同的部门
-        return item.pid === this.node.id
-      }).some(item => {
+          return item.pid === this.node.pid
+        }).some(item => {
         // 2.2 在这些结果中查出是否跟 value 相同
-        return item.name === value
-      })
-      isRepet ? callback(new Error('同部门名字不能相同')) : callback()
+          return item.name === value && item.id !== this.formData.id
+        })
+        isRepet ? callback(new Error('同部门名字不能相同')) : callback()
+      } else {
+        isRepet = depts.filter(item => {
+        // 2.1 筛选出父部门相同的部门
+          return item.pid === this.node.id
+        }).some(item => {
+        // 2.2 在这些结果中查出是否跟 value 相同
+          return item.name === value
+        })
+        isRepet ? callback(new Error('同部门名字不能相同')) : callback()
+      }
     }
     const checkCodeRepet = async(rule, value, callback) => {
       const { depts } = await getDepartments()
-      const isRepet = depts.some(item => item.code === value)
+      const isRepet = depts.some(item => item.code === value && item.id !== this.formData.id)
       isRepet ? callback(new Error('部门编码不能相同')) : callback()
     }
     return {
@@ -180,7 +192,7 @@ export default {
       setTimeout(() => {
         // validateField(props: array) 对部分表单字段进行校验的方法
         this.$refs.deptForm.validateField('manager')
-      }, 50)
+      }, 200)
     },
     async getDepartDetail(id) {
       // 获取部门的详细信息
