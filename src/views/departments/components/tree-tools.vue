@@ -39,16 +39,23 @@ export default {
   },
   methods: {
     async handleCommand(command) {
-      if (command === 'add') {
-        console.log(command)
-      } else if (command === 'edit') {
-        console.log(command)
-      } else if (command === 'del') {
-        // console.log(command)
-        await this.$confirm('是否确认删除该部门')
-        await delDepartments(this.treeNode.id)
-        this.$emit('delDepartments')
-        this.$message.success('删除成功')
+      try {
+        if (command === 'add') {
+          this.$emit('addDepts')
+        } else if (command === 'edit') {
+          console.log(command)
+        } else if (command === 'del') {
+        // 先询问是否确认
+          await this.$confirm('是否确认删除该部门')
+          // 拿到 id 发送请求即可
+          await delDepartments(this.treeNode.id)
+          // 如果正常删除完毕，应该重新载入页面
+          // 需要通知父页面
+          this.$emit('delDepartments')
+          this.$message.success('删除成功')
+        }
+      } catch (error) {
+        console.log(error)
       }
     }
   }
