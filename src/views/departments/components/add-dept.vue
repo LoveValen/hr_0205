@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments, getDepartDetail } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartDetail, updateDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -143,7 +143,11 @@ export default {
         await this.$refs.deptForm.validate()
         // 发送请求
         console.log(this.formData)
-        await addDepartments({ ...this.formData, pid: this.node.id })
+        if (this.formData.id) {
+          await updateDepartments(this.formData)
+        } else {
+          await addDepartments({ ...this.formData, pid: this.node.id })
+        }
         this.$message.success('操作成功')
         // 关闭当前弹窗
         // 不能直接改 props
@@ -159,6 +163,13 @@ export default {
       }
     },
     btnCancel() {
+      // 手动清理表单，避免回显时额外的数据残留
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
       // 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
       this.$refs.deptForm.resetFields()
       // 关闭窗口

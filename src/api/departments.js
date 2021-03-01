@@ -42,3 +42,15 @@ export function getDepartDetail(id) {
     url: `/company/department/${id}`
   })
 }
+
+/** *
+ *
+ * 新增部门接口
+ * **/
+export function updateDepartments(data) {
+  return request({
+    url: `/company/department/${data.id}`,
+    method: 'put',
+    data
+  })
+}
