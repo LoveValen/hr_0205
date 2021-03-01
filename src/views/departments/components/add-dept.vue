@@ -3,7 +3,7 @@
     title="新增部门"
     :visible="showDialog"
   >
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item
         label="部门名称"
         prop="name"
@@ -32,10 +32,14 @@
           v-model="formData.manager"
           style="width:90%"
           placeholder="请选择"
+          @focus="getEmployeeSimple"
+          @blur="checkManager"
         >
           <el-option
-            label="负责人"
-            value="负责人"
+            v-for="person in people"
+            :key="person.id"
+            :label="person.username"
+            :value="person.username"
           />
         </el-select>
       </el-form-item>
@@ -59,6 +63,7 @@
 
 <script>
 import { getDepartments } from '@/api/departments'
+import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
     showDialog: {
@@ -74,10 +79,15 @@ export default {
   },
   data() {
     const checkNameRepeat = async(rule, value, callback) => {
+      // 检查是否还是同级(同一父部门)不能同名
+      // 1. 获取全部部门数据
       const { depts } = await getDepartments()
+      // 2. 检验是否同名
       const isRepet = depts.filter(item => {
+        // 2.1 筛选出父部门相同的部门
         return item.pid === this.node.id
       }).some(item => {
+        // 2.2 在这些结果中查出是否跟 value 相同
         return item.name === value
       })
       isRepet ? callback(new Error('同部门名字不能相同')) : callback()
@@ -105,11 +115,28 @@ export default {
           { min: 1, max: 50, message: '部门编码要求 1-50 个字符', trigger: 'blur' },
           { validator: checkCodeRepet, trigger: 'blur' }
         ],
+        manager: [
+          { required: true, message: '部门负责人不能为空', trigger: 'blur' }
+        ],
         introduce: [
           { required: true, message: '部门介绍不能为空', trigger: 'blur' },
           { min: 1, max: 30, message: '部门介绍要求 1-300 个字符', trigger: 'blur' }
         ]
-      }
+      },
+      people: []
+    }
+  },
+  methods: {
+    async getEmployeeSimple() {
+      const res = await getEmployeeSimple()
+      this.people = res
+      // console.log(res)
+    },
+    checkManager() {
+      // console.log('失去焦点')
+      setTimeout(() => {
+        this.$refs.deptForm.validateField('manager')
+      }, 50)
     }
   }
 }
