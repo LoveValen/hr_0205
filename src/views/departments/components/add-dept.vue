@@ -4,7 +4,13 @@
     :visible="showDialog"
     @close="btnCancel"
   >
-    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
+    <el-form
+      v-if="showDialog"
+      ref="deptForm"
+      :model="formData"
+      :rules="rules"
+      label-width="120px"
+    >
       <el-form-item
         label="部门名称"
         prop="name"
