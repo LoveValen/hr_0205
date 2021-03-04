@@ -95,6 +95,7 @@
       <el-dialog
         title="编辑角色"
         :visible="showDialog"
+        @close="btnCancel"
       >
         <el-form ref="roleForm" :rules="rules" :model="roleData" label-width="140px">
           <el-form-item label="角色名称" prop="name">
@@ -106,7 +107,7 @@
         </el-form>
         <el-row slot="footer" type="flex" justify="center">
           <el-col :span="6">
-            <el-button size="small">取消</el-button>
+            <el-button size="small" @click="btnCancel">取消</el-button>
             <el-button size="small" type="primary" @click="btnOk">确认</el-button>
           </el-col>
         </el-row>
@@ -190,6 +191,18 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    btnCancel() {
+      // 这是关闭弹窗是需要处理的数据
+      // 重置表单数据和错误提示
+      this.roleData = {
+        name: '',
+        description: ''
+      }
+      // 这个 reset 只能清理表单有绑定的数据
+      // 回显时添加的属性就没办法了
+      this.$refs.roleForm.resetFields()
+      this.showDialog = false
     },
     currentChange(newPage) {
       this.page.page = newPage
