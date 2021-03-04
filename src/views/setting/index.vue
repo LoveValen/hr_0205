@@ -6,7 +6,7 @@
           <!-- 放置页签 -->
           <el-tab-pane label="角色管理">
             <!-- 新增角色按钮 -->
-            <el-row style="height:60px">
+            <el-row style="height: 60px">
               <el-button
                 icon="el-icon-plus"
                 size="small"
@@ -15,7 +15,12 @@
             </el-row>
             <!-- 表格 -->
             <el-table border="" :data="roleList">
-              <el-table-column label="序号" width="120px" type="index" />
+              <!-- <el-table-column label="序号" width="120px" type="index" /> -->
+              <el-table-column label="序号" width="120px">
+                <template slot-scope="data">
+                  {{ (page.page - 1) * page.pagesize + data.$index + 1 }}
+                </template>
+              </el-table-column>
               <el-table-column label="角色名称" width="240px" prop="name" />
               <el-table-column label="描述" prop="description" />
               <el-table-column label="操作">
@@ -25,13 +30,18 @@
               </el-table-column>
             </el-table>
             <!-- 分页组件 -->
-            <el-row type="flex" justify="center" align="middle" style="height: 60px">
+            <el-row
+              type="flex"
+              justify="center"
+              align="middle"
+              style="height: 60px"
+            >
               <!-- 分页组件 -->
               <el-pagination
                 background
                 layout="total,sizes,prev,pager,next,jumper"
                 :total="total"
-                :page-sizes="[2,6,10,20]"
+                :page-sizes="[2, 6, 10, 20]"
                 :page-size="page.pagesize"
                 @size-change="sizeChange"
                 @current-change="currentChange"
@@ -45,22 +55,39 @@
               show-icon
               :closable="false"
             />
-            <el-form label-width="120px" style="margin-top:50px">
+            <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="公司名称">
-                <el-input v-model="formData.name" disabled style="width:400px" />
+                <el-input
+                  v-model="formData.name"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="公司地址">
-                <el-input v-model="formData.companyAddress" disabled style="width:400px" />
+                <el-input
+                  v-model="formData.companyAddress"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="邮箱">
-                <el-input v-model="formData.mailbox" disabled style="width:400px" />
+                <el-input
+                  v-model="formData.mailbox"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="备注">
-                <el-input v-model="formData.remarks" type="textarea" :rows="3" disabled style="width:400px" />
+                <el-input
+                  v-model="formData.remarks"
+                  type="textarea"
+                  :rows="3"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
             </el-form>
           </el-tab-pane>
-
         </el-tabs>
       </el-card>
     </div>
@@ -117,5 +144,4 @@ export default {
 </script>
 
 <style>
-
 </style>
