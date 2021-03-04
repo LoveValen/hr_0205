@@ -30,7 +30,6 @@ service.interceptors.request.use(
         return Promise.reject(new Error('登录已超时'))
       }
     }
-    console.log(config)
     return config
   },
   err => {

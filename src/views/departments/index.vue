@@ -62,7 +62,6 @@ export default {
   methods: {
     async getDepartments() {
       const res = await getDepartments()
-      console.log(res)
       this.company = {
         name: res.companyName,
         manager: '负责人',

@@ -14,10 +14,10 @@
               >新增角色</el-button>
             </el-row>
             <!-- 表格 -->
-            <el-table border="">
-              <el-table-column label="序号" width="120" />
-              <el-table-column label="角色名称" width="240" />
-              <el-table-column label="描述" />
+            <el-table border="" :data="roleList">
+              <el-table-column label="序号" width="120px" type="index" />
+              <el-table-column label="角色名称" width="240px" prop="name" />
+              <el-table-column label="描述" prop="description" />
               <el-table-column label="操作">
                 <el-button size="small" type="success">分配权限</el-button>
                 <el-button size="small" type="primary">编辑</el-button>
@@ -27,7 +27,15 @@
             <!-- 分页组件 -->
             <el-row type="flex" justify="center" align="middle" style="height: 60px">
               <!-- 分页组件 -->
-              <el-pagination layout="prev,pager,next" />
+              <el-pagination
+                background
+                layout="total,sizes,prev,pager,next,jumper"
+                :total="total"
+                :page-sizes="[2,6,10,20]"
+                :page-size="page.pagesize"
+                @size-change="sizeChange"
+                @current-change="currentChange"
+              />
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="公司信息">
@@ -60,30 +68,49 @@
 </template>
 
 <script>
-import { getCompanyInfo } from '@/api/setting'
+import { getCompanyInfo, getRoleList } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
+      roleList: [],
       formData: {
         name: '',
         companyAddress: '',
         companyPhone: '',
         mailbox: '',
         remarks: ''
-      }
+      },
+      page: {
+        page: 1,
+        pagesize: 2
+      },
+      total: 0
     }
   },
   computed: {
     ...mapGetters(['companyId'])
   },
   created() {
-    console.log(this.companyId)
     this.getCompanyInfo()
+    this.getRoleList()
   },
   methods: {
     async getCompanyInfo() {
       this.formData = await getCompanyInfo(this.companyId)
+    },
+    async getRoleList() {
+      const { rows, total } = await getRoleList(this.page)
+      this.roleList = rows
+      this.total = total
+    },
+    currentChange(newPage) {
+      this.page.page = newPage
+      this.getRoleList()
+    },
+    sizeChange(newSize) {
+      this.page.pagesize = newSize
+      this.getRoleList()
     }
   }
 }
