@@ -21,7 +21,7 @@ service.interceptors.request.use(
   async config => {
     if (!config.headers.Authorization && store.getters.token) {
       if (!isTimeOut()) {
-        config.headers.Authorization = `Bearer ${store.getters.token}`
+        config.headers['Authorization'] = `Bearer ${store.getters.token}`
       } else {
         // token 过期，执行退出逻辑清理数据
         await store.dispatch('user/logout')
@@ -30,6 +30,7 @@ service.interceptors.request.use(
         return Promise.reject(new Error('登录已超时'))
       }
     }
+    console.log(config)
     return config
   },
   err => {

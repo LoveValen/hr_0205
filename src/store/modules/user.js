@@ -43,6 +43,7 @@ export default {
         ...resSimple,
         ...resDetail
       }
+      console.log(res)
       store.commit('setUserInfo', res)
       // 加一个点睛之笔  这里这一步，暂时用不到，但是请注意，这给我们后边会留下伏笔
       return res

@@ -14,8 +14,8 @@ export function login(data) {
  * **/
 export function getUserInfo() {
   return request({
-    method: 'post',
-    url: '/sys/profile'
+    url: '/sys/profile',
+    method: 'post'
   })
 }
 

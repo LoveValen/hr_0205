@@ -4,7 +4,7 @@ import NProgress from 'nprogress' // 引入一份进度条插件
 import 'nprogress/nprogress.css' // 引入进度条样式
 
 const whiteList = ['/login', '/404']
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   NProgress.start() // 开启进度条
   // 判断有无 token
   if (store.getters.token) {
@@ -14,7 +14,7 @@ router.beforeEach((to, from, next) => {
       next('/')
     } else {
       if (!store.getters.name) {
-        store.dispatch('user/getUserInfo')
+        await store.dispatch('user/getUserInfo')
       }
       next()
     }
@@ -31,6 +31,6 @@ router.beforeEach((to, from, next) => {
   NProgress.done() // 手动强制关闭一次  为了解决 手动切换地址时  进度条的不关闭的问题
 })
 
-router.afterEach(route => {
+router.afterEach(() => {
   NProgress.done()
 })
