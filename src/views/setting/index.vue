@@ -26,7 +26,7 @@
               <el-table-column label="操作">
                 <template slot-scope="{row}">
                   <el-button size="small" type="success">分配权限</el-button>
-                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button size="small" type="primary" @click="editRole(row.id)">编辑</el-button>
                   <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
                 </template>
               </el-table-column>
@@ -92,12 +92,31 @@
           </el-tab-pane>
         </el-tabs>
       </el-card>
+      <el-dialog
+        title="编辑角色"
+        :visible="showDialog"
+      >
+        <el-form ref="roleForm" :rules="rules" :model="roleData" label-width="140px">
+          <el-form-item label="角色名称" prop="name">
+            <el-input v-model="roleData.name" style="width:80%" />
+          </el-form-item>
+          <el-form-item label="角色描述" prop="description">
+            <el-input v-model="roleData.description" style="width:80%" />
+          </el-form-item>
+        </el-form>
+        <el-row slot="footer" type="flex" justify="center">
+          <el-col :span="6">
+            <el-button size="small">取消</el-button>
+            <el-button size="small" type="primary" @click="btnOk">确认</el-button>
+          </el-col>
+        </el-row>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { getCompanyInfo, getRoleList, deleteRole } from '@/api/setting'
+import { getCompanyInfo, getRoleList, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -114,7 +133,17 @@ export default {
         page: 1,
         pagesize: 2
       },
-      total: 0
+      total: 0,
+      showDialog: false,
+      roleData: {
+        name: '',
+        description: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '角色名字不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -132,7 +161,6 @@ export default {
       const { rows, total } = await getRoleList(this.page)
       this.roleList = rows
       this.total = total
-      console.log(rows)
     },
     async deleteRole(id) {
       try {
@@ -144,6 +172,21 @@ export default {
         this.getRoleList()
         // 弹出提示
         this.$message.success('删除成功')
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async editRole(id) {
+      this.showDialog = true
+      this.roleData = await getRoleDetail(id)
+    },
+    async btnOk() {
+      try {
+        await this.$refs.roleForm.validate()
+        await updateRole(this.roleData)
+        this.getRoleList()
+        this.$message.success('操作成功')
+        this.showDialog = false
       } catch (error) {
         console.log(error)
       }
